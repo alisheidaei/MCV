@@ -3,6 +3,20 @@ import pandas as pd
 from scipy.interpolate import Rbf
 
 def simulate_spatial_data(grid_size=20, seed=1368):
+    """Generates a synthetic spatial dataset with autocorrelated variables.
+
+    This function creates a grid of coordinates and simulates weather-like 
+    features (Temp, Prcp) and environmental indicators (NDVI, PM2.5) using 
+    Radial Basis Functions (RBF) to ensure spatial dependency. 
+
+    Args:
+        grid_size (int): The number of points along one axis of the square grid. 
+            The total number of rows will be grid_size^2. Defaults to 20.
+        seed (int): Random seed for reproducibility of the spatial fields. Defaults to 1368.
+
+    Returns:
+        pd.DataFrame: A dataset containing 'X', 'Y', 'temp', 'prcp', 'NDVI', and 'PM2_5'.
+    """
     np.random.seed(seed)
     
     # 1. Create X, Y Coordinates

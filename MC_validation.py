@@ -3,8 +3,19 @@ from preprocessing import split_spatial_data, scale_spatial_data
 from model_utils import build_simple_dnn, calculate_metrics, plot_validation_results, report_final_metrics
 
 def run_monte_carlo_pipeline(raw_data=None, cmodel=None, iterations=10, feature_cols=['temp', 'prcp', 'NDVI'], target_col='PM2_5', summary_plot=False, scale_data=True):
-    """
-    Executes the Monte Carlo validation approach for the spatial DNN.
+    """Executes a Monte Carlo validation routine for spatial regression models.
+
+    This function repeatedly shuffles, splits, and evaluates a model to assess 
+    performance stability and prevent spatial data leakage.
+
+    Args:
+        raw_data (pd.DataFrame, optional): Input dataset. If None, synthetic data is generated.
+        cmodel (tf.keras.Model, optional): A compiled Keras model. If None, a default DNN is used.
+        iterations (int): Number of random sub-sampling iterations. Defaults to 10.
+        feature_cols (list): Names of predictor variables. Defaults to weather/NDVI features.
+        target_col (str): Name of the dependent variable. Defaults to 'PM2_5'.
+        summary_plot (bool): If True, renders trajectory plots of metrics. Defaults to False.
+        scale_data (bool): Whether to apply feature scaling within each iteration. Defaults to True.
     """
     # Configuration
     all_cols = feature_cols + [target_col]    
@@ -17,7 +28,7 @@ def run_monte_carlo_pipeline(raw_data=None, cmodel=None, iterations=10, feature_
         print("No input data detected; simulated default data has been generated.\n")
         raw_data = simulate_spatial_data(grid_size=30, seed=42)
 
-    if cmodel==None:
+    if cmodel is None::
             # Build the DNN Architecture
             print("No input model found; a simple DNN has been substituted.\n")
             model = build_simple_dnn(input_shape=len(feature_cols))
