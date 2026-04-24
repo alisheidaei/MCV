@@ -11,4 +11,4 @@ from MC_validation import run_monte_carlo_pipeline
 
 
 if __name__ == "__main__":
-    run_monte_carlo_pipeline(iterations=10)
+    run_monte_carlo_pipeline(raw_data=None, cmodel=None, iterations=10, summary_plot=False, scale_data=True)

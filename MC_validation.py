@@ -2,7 +2,7 @@ from simulation import simulate_spatial_data
 from preprocessing import split_spatial_data, scale_spatial_data
 from model_utils import build_simple_dnn, calculate_metrics, plot_validation_results, report_final_metrics
 
-def run_monte_carlo_pipeline(raw_data=None, cmodel=None, iterations=10, feature_cols=['temp', 'prcp', 'NDVI'], target_col='PM2_5', summary_plot=False):
+def run_monte_carlo_pipeline(raw_data=None, cmodel=None, iterations=10, feature_cols=['temp', 'prcp', 'NDVI'], target_col='PM2_5', summary_plot=False, scale_data=True):
     """
     Executes the Monte Carlo validation approach for the spatial DNN.
     """
@@ -13,7 +13,7 @@ def run_monte_carlo_pipeline(raw_data=None, cmodel=None, iterations=10, feature_
     print(f"--- Starting Monte Carlo Validation ({iterations} iterations) ---")
     
     # Generate the base dataset
-    if raw_data==None:
+    if raw_data is None:
         print("No input data detected; simulated default data has been generated.\n")
         raw_data = simulate_spatial_data(grid_size=30, seed=42)
 
@@ -28,8 +28,11 @@ def run_monte_carlo_pipeline(raw_data=None, cmodel=None, iterations=10, feature_
         # Split data (using i as a seed to ensure different splits each time)
         train, val, test = split_spatial_data(raw_data, seed=i)
         
-        # Scale the features
-        train_s, val_s, test_s, _ = scale_spatial_data(train, val, test, all_cols)              
+        if scale_data==True:
+            # Scale the features
+            train_s, val_s, test_s, _ = scale_spatial_data(train, val, test, all_cols)              
+        else:
+            train_s, val_s, test_s = train, val, test
         
         # Fit the model
         # Tuning parameters (epochs/batch_size) can be adjusted here
